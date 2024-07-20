@@ -4,38 +4,66 @@ const noteInput = document.querySelector("#note-content");
 const addNoteBtn = document.querySelector(".add-note");
 
 //Funções
+function showNotes(){
+    getNotes().forEach((note) => {
+        const noteElement = creatNote(note.id, note.content, note.fixed);  
+        
+        notesContainer.appendChild(noteElement);
+    });    
+}
+
 function addNote(){
+    const notes = getNotes();
+
     const noteObject = {
         id: generatedId(),
         content: noteInput.value,
         fixed: false
     };
 
-    // console.log(noteObject)
     const noteElement = creatNote(noteObject.id, noteObject.content);
 
     notesContainer.appendChild(noteElement);
 
-    function generatedId(){
-        return Math.floor(Math.random()*5000)
-    }
+    notes.push(noteObject);
 
-    function creatNote(id, content, fixed){
-        const element = document.createElement("div");
+    saveNotes(notes);
 
-        element.classList.add("note");
+    noteInput.value = ""; //função de limpar o campo
+}
 
-        const textarea = document.createElement("textarea");
+function generatedId(){
+    return Math.floor(Math.random()*5000)
+}
 
-        textarea.value = content;
+function creatNote(id, content, fixed){
+    const element = document.createElement("div");
 
-        textarea.placeholder = "Adicione algum texto";
+    element.classList.add("note");
 
-        element.appendChild(textarea);
+    const textarea = document.createElement("textarea");
 
-        return element
-    }
+    textarea.value = content;
+
+    textarea.placeholder = "Adicione algum texto";
+
+    element.appendChild(textarea);
+
+    return element
+}
+
+function getNotes(){
+    const notes = JSON.parse(localStorage.getItem("notes") || "[]");     
+
+    return notes;
+}
+
+function saveNotes(notes){
+    localStorage.setItem("notes", JSON.stringify(notes))
 }
 
 //Eventos
 addNoteBtn.addEventListener('click', ()=> addNote());
+
+//Inicialização
+showNotes()
