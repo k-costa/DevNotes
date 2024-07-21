@@ -93,6 +93,13 @@ function creatNote(id, content, fixed){
         duplicateNote(id)
     })
 
+    element.querySelector('textarea').addEventListener('keyup', (e)=>{
+        const noteContent = e.target.value       
+
+        updateNote(id, noteContent)
+    })
+
+
     return element
 }
 
@@ -144,6 +151,16 @@ function duplicateNote(id){
     notesContainer.appendChild(noteElement)
 
     notes.push(noteObject)
+
+    saveNotes(notes)
+}
+
+function updateNote(id, newContent){
+    const notes = getNotes()
+    
+    const targetNote = notes.filter((note) => note.id === id)[0]
+
+    targetNote.content = newContent;
 
     saveNotes(notes)
 }
